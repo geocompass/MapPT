@@ -1,6 +1,6 @@
 ## 制图模板管理
 
-![地图模板](https://s2.ax1x.com/2019/11/12/M16CD0.md.gif)](https://imgchr.com/i/M16CD0)
+![地图模板](https://i.loli.net/2019/11/12/qnhUfjZIdRm5TKc.gif)
 
 ### 一、使用
 #### 1.1 命令
