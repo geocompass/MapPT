@@ -1,0 +1,21 @@
+{
+  "name": "map-print-template",
+  "version": "1.0.0",
+  "description": "制图打印模板",
+  "scripts": {
+    "test": "node test.js",
+    "jsdoc": "jsdoc ./template/A0-horizontal.js ./template/A0-vertical.js"
+  },
+  "keywords": [
+    "map"
+  ],
+  "author": "lh",
+  "license": "ISC",
+  "dependencies": {
+    "canvas": "^2.6.0"
+  },
+  "devDependencies": {
+    "eslint": "^6.6.0",
+    "eslint-config-egg": "^7.5.1"
+  }
+}
