@@ -7,22 +7,26 @@ const BaseTemplate = require('./template-base.js');
  * @extends BaseTemplate
  */
 class A0Horizontal extends BaseTemplate {
-  constructor(props) {
+  constructor(props = 'A0HorizontalDefault') {
     super();
     this.canvas = new createCanvas(14041, 9933);
     this.ctx = this.canvas.getContext('2d');
     this.canvasW = 14041;
     this.canvasH = 9933;
+    this.proxyProps = this.proxyProps(props);
     this.boderThemes = require(`../boder_themes/${props}`);
+    this.proxyBorderThemes = this.proxyBorderThemes(this.boderThemes);
     this.borderLeftW = this.boderThemes.borderLeftW;
     this.borderTopW = this.boderThemes.borderTopW;
     this.borderRightW = this.boderThemes.borderRightW;
     this.borderBottomW = this.boderThemes.borderBottomW;
     this.borderImg = this.boderThemes.borderImg;
-    this.proxyBorderThemes = this.proxyBorderThemes(this.boderThemes);
   }
 
   // proxy
+  proxyProps(props) {
+    if (!props) throw new RangeError('未选择边框主题');
+  }
   proxyBorderThemes(boderThemes) {
     const boderItem = [ 'borderLeftW', 'borderTopW', 'borderRightW', 'borderBottomW', 'borderImg' ];
     boderItem.forEach(el => {
@@ -33,34 +37,36 @@ class A0Horizontal extends BaseTemplate {
   }
 
   /**
-   * 地图 & 边框
+   * 地图
    * @param {string} mapImage - 地图路径
    * @param {object} [paramObject={}] - 地图定位参数
    * @param {number} [paramObject.left=this.borderLeftW] - 地图相对左边距
    * @param {number} [paramObject.top=this.borderTopW] - 地图相对上边距
    */
   async createMap(mapImage, { left = this.borderLeftW, top = this.borderTopW } = {}) {
+    if (!mapImage) throw new RangeError('地图路径参数错误');
     const { ctx } = this;
     const imageBuffer = await loadImage(mapImage);
     ctx.drawImage(imageBuffer, left, top);
-
-    await this.createBorder();
+    console.group('横版图幅制作中▼');
+    console.log('地图✔');
   }
 
   /**
    * 图幅指北针
-   * @param {string} compassPath - 图幅指北针路径
+   * @param {string} [compassPath='./assets/zbz.png'] - 图幅指北针路径
    * @param {object} [paramObject={}] - 图幅指北针定位参数
    * @param {number} [paramObject.distanceBorderRight=354] - 图幅指北针距右边框
    * @param {number} [paramObject.distanceBorderTop=360] - 图幅指北针距上边框
    * @param {number} [paramObject.imgW=708] - 图幅指北宽
    * @param {number} [paramObject.imgH=877] - 图幅指北针高
    */
-  async createCompass(compassPath, { distanceBorderRight = 354, distanceBorderTop = 360, imgW = 708, imgH = 877 } = {}) {
+  async createCompass(compassPath = './assets/zbz.png', { distanceBorderRight = 354, distanceBorderTop = 360, imgW = 708, imgH = 877 } = {}) {
     const { ctx } = this;
     const [ left, top ] = [ this.canvasW - imgW - distanceBorderRight - this.borderRightW, distanceBorderTop + this.borderTopW ];
     const imageBuffer = await loadImage(compassPath);
     ctx.drawImage(imageBuffer, left, top, imgW, imgH);
+    console.log('图幅指北针√');
   }
 
   /**
@@ -74,6 +80,7 @@ class A0Horizontal extends BaseTemplate {
     const { ctx } = this;
     const imageBuffer = await loadImage(borderPath);
     ctx.drawImage(imageBuffer, left, top);
+    console.log('图幅边框√');
   }
 
   /**
@@ -87,11 +94,13 @@ class A0Horizontal extends BaseTemplate {
    * @param {string} [paramObject.fontType='hyf'] - 图幅字体
    */
   createTiltle(title, { left = 5222, top = 314, fontSize = 417, fontColor = '#0A5179', fontType = 'hyf' } = {}) {
+    if (!title) throw new RangeError('图幅标题参数错误');
     const { ctx } = this;
     ctx.font = `${fontSize}px ${fontType}`;
     ctx.fillStyle = fontColor;
     ctx.textBaseline = 'top';
     ctx.fillText(title, left, top);
+    console.log('图幅标题√');
   }
 
   /**
@@ -101,11 +110,11 @@ class A0Horizontal extends BaseTemplate {
    * @param {string} iconOption.data[].icon - 图例指示内容图片路径
    * @param {string} iconOption.data[].txt - 图例指示内容图片信息
    * @param {object} iconOption.option - 图例指示内容配置项
-   * @param {number} [iconOption.option.iconColumn=1] - 图例内容需要分多少列(必须可以被iconOption.data.length整除)
-   * @param {number} [iconOption.option.iconWidth=176] - icon宽
-   * @param {number} [iconOption.option.iconHight=176] - icon高
-   * @param {number} [iconOption.option.iconFontSize=105] - icon字体大小
-   * @param {string} [iconOption.option.iconFontColor='#221714'] - icon字体颜色
+   * @param {number} iconOption.option.iconColumn - 图例内容需要分多少列(必须可以被iconOption.data.length整除)
+   * @param {number} iconOption.option.iconWidth - icon宽
+   * @param {number} iconOption.option.iconHight - icon高
+   * @param {number} iconOption.option.iconFontSize - icon字体大小
+   * @param {string} iconOption.option.iconFontColor - icon字体颜色
    * @param {object} legendOption 图例配置项
    * @param {string} [legendOption.boderColor='#0A5179'] - 图例边框颜色
    * @param {number} [legendOption.tuliFontSize=146] - 图例标题字号
@@ -113,8 +122,9 @@ class A0Horizontal extends BaseTemplate {
    */
   async createLegend(
     iconOption = {},
-    legendOption = {}
+    legendOption = { boderColor: '#0A5179', tuliFontSize: 146, tuliFontColor: '#221815' }
   ) {
+    if (!iconOption.data || !iconOption.option) throw new RangeError('图例参数错误');
     const { ctx } = this;
     const [ boderColor, tuliFont, tuliColor, pointData, iconColumn, iconW, iconH, iconFont, iconColor ] = [
       legendOption.boderColor,
@@ -176,6 +186,7 @@ class A0Horizontal extends BaseTemplate {
       ctx.font = `${iconFont}px hanyizhongyuan`;
       ctx.fillText(item.txt, iconIndexLeft + 1.5 * iconW, iconIndexTop + (iconH - iconFont) / 2);
     });
+    console.log('制作图例√');
   }
 
   /**
@@ -193,6 +204,7 @@ class A0Horizontal extends BaseTemplate {
     ctx.font = `${fontSize}px hyf`;
     ctx.fillStyle = fontColor;
     ctx.fillText(name, left, top);
+    console.log('主编单位√');
   }
 
   /**
@@ -214,6 +226,7 @@ class A0Horizontal extends BaseTemplate {
    * @param {string} [paramObject.fontColor='#221815'] - 比例尺数值字体颜色
    */
   createScale(scale, { left = 8126, top = 9701, fontSize = 104, fontColor = '#221815' } = {}) {
+    if (!scale) throw new RangeError('比例尺参数错误');
     const { ctx } = this;
     ctx.fillText(`比例尺 1:${this.percentSign(scale)}`, left, top);
     ctx.font = `${fontSize}px "hyf"`;
@@ -275,6 +288,7 @@ class A0Horizontal extends BaseTemplate {
         }
       }
     }
+    console.log('比例尺√');
   }
 
   /**
@@ -292,6 +306,7 @@ class A0Horizontal extends BaseTemplate {
     ctx.font = `${fontSize}px hyf`;
     ctx.fillStyle = fontColor;
     ctx.fillText(name, left, top);
+    console.log('承编单位√');
   }
 
 }
