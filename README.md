@@ -2,8 +2,6 @@
 
 ![生成制图模板](https://i.loli.net/2019/11/14/9a5rMFyg8RZxWlL.gif)
 
-![生成jsdoc文档](https://i.loli.net/2019/11/14/3NW45ISx2AtDPKQ.gif)
-
 ### 一、使用
 #### 1.1 命令
 ```
@@ -52,6 +50,8 @@ const A0 = new A0WallMap('A0verticalDefault');
 |            主编单位           |      createZbdw()       |             否            |  国信司南（北京）地理信息技术有限公司 |   String    |
 |            比例尺             |      createScale()      |             是            |           -              |   String    |
 |            承编单位           |      createCbdw()       |             否            |  国信司南（北京）地理信息技术有限公司 |   String    |
+
+![生成jsdoc文档](https://i.loli.net/2019/11/14/3NW45ISx2AtDPKQ.gif)
 
 #### 1.5 生成模板
 ```
