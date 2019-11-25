@@ -1,5 +1,8 @@
 'use strict';
-const { createCanvas, loadImage } = require('canvas');
+const {
+  createCanvas,
+  loadImage
+} = require('canvas');
 const BaseTemplate = require('./template-base.js');
 
 /**
@@ -28,7 +31,7 @@ class A0Vertical extends BaseTemplate {
     if (!props) throw new RangeError('未选择边框主题');
   }
   proxyBorderThemes(boderThemes) {
-    const boderItem = [ 'borderLeftW', 'borderTopW', 'borderRightW', 'borderBottomW', 'borderImg' ];
+    const boderItem = ['borderLeftW', 'borderTopW', 'borderRightW', 'borderBottomW', 'borderImg'];
     boderItem.forEach(el => {
       if (!(el in boderThemes)) {
         throw new RangeError('边框主题参数错误');
@@ -43,9 +46,14 @@ class A0Vertical extends BaseTemplate {
    * @param {number} [paramObject.left=this.borderLeftW] - 地图相对左边距
    * @param {number} [paramObject.top=this.borderTopW] - 地图相对上边距
    */
-  async createMap(mapImage, { left = this.borderLeftW, top = this.borderTopW } = {}) {
+  async createMap(mapImage, {
+    left = this.borderLeftW,
+    top = this.borderTopW
+  } = {}) {
     if (!mapImage) throw new RangeError('地图路径参数错误');
-    const { ctx } = this;
+    const {
+      ctx
+    } = this;
     const imageBuffer = await loadImage(mapImage);
     ctx.drawImage(imageBuffer, left, top);
     console.group('竖版图幅制作中▼');
@@ -61,9 +69,16 @@ class A0Vertical extends BaseTemplate {
    * @param {number} [paramObject.imgW=708] - 图幅指北宽
    * @param {number} [paramObject.imgH=877] - 图幅指北针高
    */
-  async createCompass(compassPath = './assets/zbz.png', { distanceBorderRight = 354, distanceBorderTop = 360, imgW = 708, imgH = 877 } = {}) {
-    const { ctx } = this;
-    const [ left, top ] = [ this.canvasW - imgW - distanceBorderRight - this.borderRightW, distanceBorderTop + this.borderTopW ];
+  async createCompass(compassPath = './assets/zbz.png', {
+    distanceBorderRight = 354,
+    distanceBorderTop = 360,
+    imgW = 708,
+    imgH = 877
+  } = {}) {
+    const {
+      ctx
+    } = this;
+    const [left, top] = [this.canvasW - imgW - distanceBorderRight - this.borderRightW, distanceBorderTop + this.borderTopW];
     const imageBuffer = await loadImage(compassPath);
     ctx.drawImage(imageBuffer, left, top, imgW, imgH);
     console.log('图幅指北针√');
@@ -76,8 +91,13 @@ class A0Vertical extends BaseTemplate {
    * @param {number} [paramObject.left=0] - 图幅边框相对左边距
    * @param {number} [paramObject.top=0] - 图幅边框相对上边距
    */
-  async createBorder(borderPath = this.borderImg, { left = 0, top = 0 } = {}) {
-    const { ctx } = this;
+  async createBorder(borderPath = this.borderImg, {
+    left = 0,
+    top = 0
+  } = {}) {
+    const {
+      ctx
+    } = this;
     const imageBuffer = await loadImage(borderPath);
     ctx.drawImage(imageBuffer, left, top);
     console.log('图幅边框√');
@@ -93,9 +113,17 @@ class A0Vertical extends BaseTemplate {
    * @param {string} [paramObject.fontColor='#0A5179'] - 图幅字体颜色
    * @param {string} [paramObject.fontType='hyf'] - 图幅字体
    */
-  createTiltle(title, { left = 2921, top = 319, fontSize = 417, fontColor = '#0A5179', fontType = 'hyf' } = {}) {
+  createTiltle(title, {
+    left = 2921,
+    top = 319,
+    fontSize = 417,
+    fontColor = '#0A5179',
+    fontType = 'hyf'
+  } = {}) {
     if (!title) throw new RangeError('图幅标题参数错误');
-    const { ctx } = this;
+    const {
+      ctx
+    } = this;
     ctx.font = `${fontSize}px ${fontType}`;
     ctx.fillStyle = fontColor;
     ctx.textBaseline = 'top';
@@ -122,11 +150,17 @@ class A0Vertical extends BaseTemplate {
    */
   async createLegend(
     iconOption = {},
-    LegendOption = { boderColor: '#0A5179', tuliFontSize: 146, tuliFontColor: '#221815' }
+    LegendOption = {
+      boderColor: '#0A5179',
+      tuliFontSize: 146,
+      tuliFontColor: '#221815'
+    }
   ) {
     if (!iconOption.data || !iconOption.option) throw new RangeError('图例参数错误');
-    const { ctx } = this;
-    const [ boderColor, tuliFont, tuliColor, pointData, iconColumn, iconW, iconH, iconFont, iconColor ] = [
+    const {
+      ctx
+    } = this;
+    const [boderColor, tuliFont, tuliColor, pointData, iconColumn, iconW, iconH, iconFont, iconColor] = [
       LegendOption.boderColor,
       LegendOption.tuliFontSize,
       LegendOption.tuliFontColor,
@@ -144,19 +178,27 @@ class A0Vertical extends BaseTemplate {
     const borderH = tuliMargin + iconColumnH; // 图例边框总高度
     // 计算总宽度
     const countPointDataLen = [];
-    pointData.forEach(item => { countPointDataLen.push(item.txt.length); });
-    const iconTxtMaxLen = countPointDataLen.sort((a, b) => { return b - a; })[0] * iconFont; // 计算最长的txt
+    pointData.forEach(item => {
+      countPointDataLen.push(item.txt.length);
+    });
+    const iconTxtMaxLen = countPointDataLen.sort((a, b) => {
+      return b - a;
+    })[0] * iconFont; // 计算最长的txt
     const iconMaxLen = iconTxtMaxLen + iconW * (1.5); // icon中最大长度
     let borderW; // iconMaxLen * 个数 + icon间距(0.5) + 两边间距(0.5+0.5)
     if (iconMaxLen > 560) {
       borderW = iconColumn * iconMaxLen + (iconColumn - 1) * iconMaxLen / 2 + 200 + 200; // 最大宽度 = 最长icon * 个数 + 最长icon * 间距 + 200 + 200
     } else {
-      borderW = 560 + 200 + 200; // 最大宽度 = 图例宽度 + 200 + 200
+      if (iconColumn === 1) {
+        borderW = 560 + 200 + 200; // 最大宽度 = 图例宽度 + 200 + 200
+      } else {
+        borderW = iconColumn * iconMaxLen + (iconColumn - 1) * iconMaxLen / 2 + 200 + 200;
+      }
     }
 
     // 创建、定位自适应边框
-    const [ borderRight, borderBottom, borderLineW ] = [ this.borderRightW, this.borderBottomW, 10 ];
-    const [ borderLeft, borderTop ] = [ this.canvasW - borderRight - borderW - borderLineW, this.canvasH - borderBottom - borderH - borderLineW ];
+    const [borderRight, borderBottom, borderLineW] = [this.borderRightW, this.borderBottomW, 10];
+    const [borderLeft, borderTop] = [this.canvasW - borderRight - borderW - borderLineW, this.canvasH - borderBottom - borderH - borderLineW];
     ctx.strokeStyle = boderColor;
     ctx.fillRect(borderLeft, borderTop, borderW + 20, borderH + 20);
     ctx.clearRect(borderLeft + 10, borderTop + 10, borderW, borderH);
@@ -164,7 +206,7 @@ class A0Vertical extends BaseTemplate {
     ctx.fillRect(borderLeft + 10, borderTop + 10, borderW, borderH);
 
     // 创建、定位自适应'图 例'
-    const [ tu, li ] = [ '图', '例' ];
+    const [tu, li] = ['图', '例'];
     const fontTuLeft = borderLeft + (borderW - 560) / 2;
     const fontLiLeft = fontTuLeft + tuliFont + 308;
     const tuLiTop = borderTop + 0.5 * tuliFont;
@@ -198,9 +240,16 @@ class A0Vertical extends BaseTemplate {
    * @param {number} [paramObject.fontSize=104] - 主编单位字体字号
    * @param {string} [paramObject.fontColor='#221815'] - 主编单位字体颜色
    */
-  createZbdw(zbdwName = '国信司南（北京）地理信息技术有限公司', { left = 713, top = 13803, fontSize = 104, fontColor = '#221815' } = {}) {
+  createZbdw(zbdwName = '国信司南（北京）地理信息技术有限公司', {
+    left = 713,
+    top = 13803,
+    fontSize = 104,
+    fontColor = '#221815'
+  } = {}) {
     const name = `主编单位：${zbdwName}`;
-    const { ctx } = this;
+    const {
+      ctx
+    } = this;
     ctx.font = `${fontSize}px hanyizhongyuan`;
     ctx.fillStyle = fontColor;
     ctx.fillText(name, left, top);
@@ -224,9 +273,16 @@ class A0Vertical extends BaseTemplate {
    * @param {number} [paramObject.fontSize=104] - 比例尺数值字体字号
    * @param {string} [paramObject.fontColor='#221815'] - 比例尺数值字体颜色
    */
-  createScale(scale, { left = 4000, top = 13812, fontSize = 104, fontColor = '#221815' } = {}) {
+  createScale(scale, {
+    left = 4000,
+    top = 13812,
+    fontSize = 104,
+    fontColor = '#221815'
+  } = {}) {
     if (!scale) throw new RangeError('比例尺参数错误');
-    const { ctx } = this;
+    const {
+      ctx
+    } = this;
     ctx.fillText(`比例尺 1:${this.percentSign(scale)}`, left, top);
     ctx.font = `${fontSize}px "hanyizhongyuan"`;
     ctx.fillStyle = fontColor;
@@ -241,8 +297,15 @@ class A0Vertical extends BaseTemplate {
    * @param {number} [paramObject.fontSize=52] - 比例尺图示字体字号
    * @param {string} [paramObject.fontColor='#221815'] - 比例尺图示字体颜色
    */
-  createScaleBar(scale, { left = 4971, top = 13869, fontSize = 52, fontColor = '#221815' } = {}) {
-    const { ctx } = this;
+  createScaleBar(scale, {
+    left = 4971,
+    top = 13869,
+    fontSize = 52,
+    fontColor = '#221815'
+  } = {}) {
+    const {
+      ctx
+    } = this;
     // 边框矩形 & 实体矩形
     ctx.strokeStyle = fontColor;
     ctx.fillStyle = fontColor;
@@ -261,7 +324,7 @@ class A0Vertical extends BaseTemplate {
     ctx.lineTo(left + 1180, top + 35);
     ctx.stroke();
     // 图示单位
-    const [ tsLeft, tsTop ] = [ left + 1197, top - 11 ];
+    const [tsLeft, tsTop] = [left + 1197, top - 11];
     let tsDw = '';
     // 图视数值
     let cmToM;
@@ -277,7 +340,7 @@ class A0Vertical extends BaseTemplate {
     ctx.fillText(tsDw, tsLeft, tsTop);
     for (let i = 0; i < 11; i++) {
       const item = `${cmToM * i}`;
-      const [ itemLeft, itemTop ] = [ left + 118 * i - item.length * fontSize / 5, top - 78 ];
+      const [itemLeft, itemTop] = [left + 118 * i - item.length * fontSize / 5, top - 78];
       if (i < 5) {
         ctx.fillText(item, itemLeft, itemTop);
       } else {
@@ -298,9 +361,16 @@ class A0Vertical extends BaseTemplate {
    * @param {number} [paramObject.fontSize=104] - 承编单位字体字号
    * @param {string} [paramObject.fontColor='#221815'] - 承编单位字体颜色
    */
-  createCbdw(cbdwName = '国信司南（北京）地理信息技术有限公司', { left = 6816, top = 13799, fontSize = 104, fontColor = '#221815' } = {}) {
+  createCbdw(cbdwName = '国信司南（北京）地理信息技术有限公司', {
+    left = 6816,
+    top = 13799,
+    fontSize = 104,
+    fontColor = '#221815'
+  } = {}) {
     const name = `承编单位：${cbdwName}`;
-    const { ctx } = this;
+    const {
+      ctx
+    } = this;
     ctx.font = `${fontSize}px hanyizhongyuan`;
     ctx.fillStyle = fontColor;
     ctx.fillText(name, left, top);
