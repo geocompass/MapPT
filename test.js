@@ -1,8 +1,8 @@
 'use strict';
 // 详细参数配置请生成jsdoc文档查阅
-const A0WallMap = require('./template/A0-horizontal'); // 版式 vertical Horizontal
+const A0WallMap = require('./template/A0-vertical'); // 版式 vertical Horizontal
 (async function () {
-  const A0 = new A0WallMap('A0HorizontalDefault'); // 实例化主题
+  const A0 = new A0WallMap('A0VerticalDefault'); // 实例化主题
   await A0.createMap('./assets/merge.png'); // 地图(必填)
   await A0.createCompass('./assets/zbz.png'); // 指北针
   await A0.createBorder(); // 边框

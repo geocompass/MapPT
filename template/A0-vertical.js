@@ -286,7 +286,8 @@ class A0Vertical extends BaseTemplate {
     ctx.fillText(`比例尺 1:${this.percentSign(scale)}`, left, top);
     ctx.font = `${fontSize}px "hanyizhongyuan"`;
     ctx.fillStyle = fontColor;
-    this.createScaleBar(scale);
+    const [scaleBarLeft, scaleBarTop, scaleBarSize] = [left + 971, top + 57, fontSize / 2];
+    this.createScaleBar(scale, scaleBarLeft, scaleBarTop, scaleBarSize, fontColor);
   }
   /**
    * 比例尺图示
@@ -297,15 +298,17 @@ class A0Vertical extends BaseTemplate {
    * @param {number} [paramObject.fontSize=52] - 比例尺图示字体字号
    * @param {string} [paramObject.fontColor='#221815'] - 比例尺图示字体颜色
    */
-  createScaleBar(scale, {
-    left = 4971,
-    top = 13869,
-    fontSize = 52,
-    fontColor = '#221815'
-  } = {}) {
+  createScaleBar(
+    scale,
+    scaleBarLeft,
+    scaleBarTop,
+    scaleBarSize,
+    fontColor
+  ) {
     const {
       ctx
     } = this;
+    let [left, top, fontSize] = [scaleBarLeft, scaleBarTop, scaleBarSize];
     // 边框矩形 & 实体矩形
     ctx.strokeStyle = fontColor;
     ctx.fillStyle = fontColor;
